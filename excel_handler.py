@@ -209,7 +209,7 @@ def excel_processing(file_path: str, sheet_data: Dict[str, pd.DataFrame],
     else:
         current_dir = os.path.dirname(os.path.abspath(__file__))
     cleaned_path = os.path.join(current_dir, "cleaned.xlsx")
-    # Img = Image(os.path.join(current_dir, "QW.png"))
+    Img = Image(os.path.join(current_dir, "QW.png"))
     shutil.copy2(cleaned_path, result_path)
 
     # Загружаем исходный файл и целевой файл
@@ -218,11 +218,11 @@ def excel_processing(file_path: str, sheet_data: Dict[str, pd.DataFrame],
     target_ws = target_wb.active
 
     # Вставка изображения
-    # Img.width = 96 
-    # Img.height = 58
-    # target_ws.column_dimensions["A"].width = 15
-    # target_ws.row_dimensions[1].height = 60
-    # target_ws.add_image(Img, "A1")
+    Img.width = 96 
+    Img.height = 58
+    target_ws.column_dimensions["A"].width = 15
+    target_ws.row_dimensions[1].height = 60
+    target_ws.add_image(Img, "A1")
 
     # Сбор выбранных данных из исходного файла 
     for source_ws in source_wb.worksheets:
@@ -346,21 +346,18 @@ def excel_processing(file_path: str, sheet_data: Dict[str, pd.DataFrame],
 
     # Пробегаемся по каждой видимой колонке и считаем максимальную длину текста
     for i, old_pos in enumerate(visible_positions, start=1):
-        max_len = 0
+        max_len = 1
         for r in range(3, target_ws.max_row + 1):
             v = target_ws.cell(row=r, column=i).value
             if v is None:
                 continue
             length = len(str(v))
-            # ограничиваем учётные длины (например, максимум 50 символов)
-            if length > 50:
-                length = 50
             if length > max_len:
                 max_len = length
         # ширина = макс. длина + 2, но не больше 60
         target_ws.column_dimensions[get_column_letter(i)].width = max_len + 5
 
-    # ---- Сохранение результата ----
+    # Сохранение результата
     target_wb.save(result_path)
     target_wb.close()
 
